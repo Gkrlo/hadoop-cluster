@@ -1,0 +1,39 @@
+---
+version: '2'
+services:
+
+  node1:
+    image: gkrlodebian
+    hostname: node1
+    ports:
+      - "2221:22"
+    networks:
+      - mycluster
+
+  node2:
+    image: gkrlodebian
+    hostname: node2
+    ports:
+      - "2222:22"
+    networks:
+      - mycluster
+
+  node3:
+    image: gkrlodebian
+    hostname: node3
+    ports:
+      - "2223:22"
+    networks:
+      - mycluster
+
+  node4:
+    image: gkrlodebian
+    hostname: node4
+    ports:
+      - "2224:22"
+    networks:
+      - mycluster
+
+networks:
+  mycluster:
+    driver: bridge

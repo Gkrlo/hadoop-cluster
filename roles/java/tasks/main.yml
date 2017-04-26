@@ -1,0 +1,43 @@
+---
+
+- name: Install required packages
+  apt:
+    name: "{{ item }}"
+    force: yes
+    state: latest
+    update_cache: yes
+  with_items: "{{java_dependencies}}"
+
+- name: Add apt repository
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+    update_cache: no
+  with_items: "{{java_repositories}}"
+  when: ansible_distribution in [ 'Debian' ]
+
+- name: Add Java repository key to sources in Debian
+  apt_key:
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: EEA14886
+  when: ansible_distribution in [ 'Debian' ]
+
+- name: Add Java repository to sources in Ubuntu
+  apt_repository:
+    repo: ppa:webupd8team/java
+  when: ansible_distribution in [ 'Ubuntu' ]
+
+- name: Autoaccept license for Java
+  debconf:
+    name: oracle-java{{ java_version }}-installer
+    question: shared/accepted-oracle-license-v1-1
+    value: 'true'
+    vtype: 'select'
+
+- name: Install Java
+  apt:
+    name: "{{ item }}"
+    state: latest
+    install_recommends: yes
+    update_cache: yes
+  with_items: "{{java_packages}}"

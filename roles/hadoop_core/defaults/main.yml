@@ -1,0 +1,17 @@
+---
+hadoop_user: root
+hadoop_version: 2.8.0
+hadoop_home: "/opt/hadoop-{{ hadoop_version }}"
+hadoop_namenode_dir: "{{ hadoop_home }}/hdfs/namenode"
+hadoop_namesecondary_dir: "{{ hadoop_home }}/hdfs/namesecondary"
+hadoop_datanode_dir: "{{ hadoop_home }}/hdfs/datanode"
+hadoop_java_home: "/usr/lib/jvm/java-8-oracle/"
+hadoop_download_url: "http://ftp.cixug.es/apache/hadoop/common/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz"
+hadoop_env_vars:
+  - { prefix: "export JAVA_HOME", sufix: "={{ hadoop_java_home }}" }
+  - { prefix: "export HADOOP_HOME", sufix: "={{ hadoop_home }}" }
+  - { prefix: "export HADOOP_MAPRED_HOME", sufix: "=$HADOOP_HOME" }
+  - { prefix: "export HADOOP_COMMON_HOME", sufix: "=$HADOOP_HOME" }
+  - { prefix: "export HADOOP_HDFS_HOME", sufix: "=$HADOOP_HOME" }
+  - { prefix: "export YARN_HOME", sufix: "=$HADOOP_HOME" }
+  - { prefix: "export PATH=$PATH:$HADOOP_HOME/bin", sufix: ""}

@@ -1,0 +1,11 @@
+---
+java_dependencies:
+  - python-apt
+  - python-pycurl
+  - python-software-properties
+java_packages:
+  - "oracle-java{{ java_version }}-installer"
+  - "oracle-java{{ java_version }}-set-default"
+java_repositories:
+  - 'deb http://ppa.launchpad.net/webupd8team/java/ubuntu precise main'
+  - 'deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu precise main'

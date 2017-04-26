@@ -1,0 +1,28 @@
+# Hadoop Cluster
+#################################################################
+
+[hadoop]
+node1 ansible_host=localhost ansible_user=root ansible_port=2221
+node2 ansible_host=localhost ansible_user=root ansible_port=2222
+node3 ansible_host=localhost ansible_user=root ansible_port=2223
+node4 ansible_host=localhost ansible_user=root ansible_port=2224
+
+[resourcemanager]
+node1 ansible_host=localhost ansible_user=root ansible_port=2221
+
+[namenode]
+node1 ansible_host=localhost ansible_user=root ansible_port=2221
+
+[secondnamenode]
+node1 ansible_host=localhost ansible_user=root ansible_port=2221
+
+[datanode]
+node2 ansible_host=localhost ansible_user=root ansible_port=2222
+node3 ansible_host=localhost ansible_user=root ansible_port=2223
+node4 ansible_host=localhost ansible_user=root ansible_port=2224
+
+
+#Zookeeper
+##################################################################
+[zookeeper]
+node1 ansible_host=localhost ansible_user=root ansible_port=2221

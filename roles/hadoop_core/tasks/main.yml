@@ -1,0 +1,100 @@
+---
+- name: Hadoop | Download package
+  get_url:
+    url: "{{ hadoop_download_url }}"
+    dest: /tmp/
+    remote_src: yes
+    validate_certs: no
+
+- name: Hadoop | Unzip hadoop package
+  unarchive:
+    src: "/tmp/hadoop-{{ hadoop_version }}.tar.gz"
+    dest: /opt/
+    copy: no
+
+- name: Hadoop | Remove hadoop env vars
+  lineinfile:
+    path: "/root/.bashrc"
+    regexp: "^{{item['prefix']}}"
+    state: absent
+  with_items: "{{ hadoop_env_vars }}"
+
+- name: Hadoop | Add hadoop env vars
+  lineinfile:
+    path: "/root/.bashrc"
+    line: "{{ item['prefix']+item['sufix'] }}"
+    insertafter: EOF
+    state: present
+  with_items: "{{ hadoop_env_vars }}"
+
+- name: Hadoop | Overwrite core-site.xml
+  template:
+    src: core-site.xml.j2
+    dest: "{{ hadoop_home }}/etc/hadoop/core-site.xml"
+    force: yes
+
+- name: Hadoop | Overwrite hdfs-site.xml
+  template:
+    src: hdfs-site.xml.j2
+    dest: "{{ hadoop_home }}/etc/hadoop/hdfs-site.xml"
+    force: yes
+
+- name: Hadoop | Overwrite mapred-site.xml
+  template:
+    src: mapred-site.xml.j2
+    dest: "{{ hadoop_home }}/etc/hadoop/mapred-site.xml"
+    force: yes
+
+- name: Hadoop | Overwrite yarn-site.xml
+  template:
+    src: yarn-site.xml.j2
+    dest: "{{ hadoop_home }}/etc/hadoop/yarn-site.xml"
+    force: yes
+
+- name: Hadoop | Verify the namenode dir
+  stat:
+    path: "{{ hadoop_namenode_dir }}"
+  register: st_namenode_dir
+
+- name: Hadoop | Remove namenode dir if exists
+  file:
+    path: "{{ hadoop_namenode_dir }}"
+    state: absent
+  when: st_namenode_dir.stat.exists
+
+- name: Hadoop | Create namenode dir
+  file:
+    path: "{{ hadoop_namenode_dir }}"
+    state: directory
+
+- name: Hadoop | Verify the namesecondary dir
+  stat:
+    path: "{{ hadoop_namesecondary_dir }}"
+  register: st_namesecondary_dir
+
+- name: Hadoop | Remove namesecondary dir if exists
+  file:
+    path: "{{ hadoop_namesecondary_dir }}"
+    state: absent
+  when: st_namesecondary_dir.stat.exists
+
+- name: Hadoop | Create namesecondary dir
+  file:
+    path: "{{ hadoop_namesecondary_dir }}"
+    state: directory
+
+- name: Hadoop | Verify the datanode dir
+  stat:
+    path: "{{ hadoop_datanode_dir }}"
+  register: st_datanode_dir
+
+- name: Hadoop | Remove datanode dir if exists
+  file:
+    path: "{{ hadoop_datanode_dir }}"
+    state: absent
+  when: st_datanode_dir.stat.exists
+
+- name: Hadoop | Create datanode dir
+  file:
+    path: "{{ hadoop_datanode_dir }}"
+    state: directory

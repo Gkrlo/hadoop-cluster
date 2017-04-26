@@ -1,0 +1,9 @@
+---
+- name: Zookeeper | start zookeeper
+  shell: "{{ zookeeper_install_dir }}/bin/zkServer.sh start"
+
+- name: Zookeeper | stop zookeeper
+  shell: "{{ zookeeper_install_dir }}/bin/zkServer.sh stop"
+
+- name: Zookeeper | restart zookeeper
+  shell: "{{ zookeeper_install_dir }}/bin/zkServer.sh restart"

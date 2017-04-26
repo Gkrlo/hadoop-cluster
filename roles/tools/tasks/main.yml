@@ -1,0 +1,64 @@
+---
+- name: Tools | Install some packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "apt-transport-https"
+    - "wget"
+    - "tar"
+    - "unzip"
+  tags:
+    - tools
+
+# It does not work in containers. You won't need it anyway.
+# Uncomment for other machines.
+#
+#- name: Tools | Remove similar IPs in hosts file
+#  lineinfile:
+#    dest: /etc/hosts
+#    regexp: "^{{ hostvars[item].ansible_default_ipv4.address }}"
+#    state: absent
+#  when: hostvars[item].ansible_default_ipv4.address is defined
+#  with_items: "{{hostvars[groups['hadoop'] }}"
+#  tags:
+#    - tools
+
+#- name: Tools | Add host in hosts file
+#  lineinfile:
+#    dest: /etc/hosts
+#    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{item}}"
+#    insertafter: EOF
+#    state: present
+#  when: hostvars[item].ansible_default_ipv4.address is defined
+#  with_items: "{{hostvars[groups['hadoop'] }}"
+#  tags:
+#    - tools
+
+- name: Tools | Generate SSH key
+  shell: ssh-keygen -b 2048 -t rsa -f /root/.ssh/id_rsa -q -N ""
+  args:
+    creates: /root/.ssh/id_rsa
+  tags:
+    - tools
+
+- name: Tools | Fetch all public ssh keys
+  shell: cat ~/.ssh/id_rsa.pub
+  register: ssh_keys
+  tags:
+    - tools
+
+- name: Tools | Check ssh keys
+  debug: msg="{{ ssh_keys.stdout }}"
+  tags:
+   - tools
+
+- name: Tools | Deploy keys on all servers
+  authorized_key: user=root key="{{ item[0] }}"
+  delegate_to: "{{ item[1] }}"
+  with_nested:
+    - "{{ ssh_keys.stdout }}"
+    - "{{groups['hadoop']}}"
+  tags:
+    - tools
