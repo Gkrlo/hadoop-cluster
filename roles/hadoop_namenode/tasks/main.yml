@@ -25,7 +25,7 @@
     chdir: "{{ hadoop_home }}/sbin"
   when: ansible_hostname == groups['namenode'][0]
 
-- name: Hadoop | Start YARM
+- name: Hadoop | Start YARN
   shell: "yes 'yes' | ./start-yarn.sh"
   args:
     chdir: "{{ hadoop_home }}/sbin"
