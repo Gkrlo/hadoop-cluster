@@ -4,29 +4,29 @@
     src: masters.j2
     dest: "{{ hadoop_home }}/etc/hadoop/masters"
     force: yes
-  when: ansible_hostname == groups['namenode'][0]
+  when: inventory_hostname == groups['namenode'][0]
 
 - name: Hadoop | Create slaves file
   template:
     src: slaves.j2
     dest: "{{ hadoop_home }}/etc/hadoop/slaves"
     force: yes
-  when: ansible_hostname == groups['namenode'][0]
+  when: inventory_hostname == groups['namenode'][0]
 
 - name: Hadoop | Format the namenode
   shell: "yes 'y' | ./hadoop namenode -format"
   args:
     chdir: "{{ hadoop_home }}/bin/"
-  when: ansible_hostname == groups['namenode'][0]
+  when: inventory_hostname == groups['namenode'][0]
 
 - name: Hadoop | Start HDFS
   shell: "yes 'yes' | ./start-dfs.sh"
   args:
     chdir: "{{ hadoop_home }}/sbin"
-  when: ansible_hostname == groups['namenode'][0]
+  when: inventory_hostname == groups['namenode'][0]
 
 - name: Hadoop | Start YARN
   shell: "yes 'yes' | ./start-yarn.sh"
   args:
     chdir: "{{ hadoop_home }}/sbin"
-  when: ansible_hostname == groups['namenode'][0]
+  when: inventory_hostname == groups['namenode'][0]

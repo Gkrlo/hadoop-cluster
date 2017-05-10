@@ -1,0 +1,27 @@
+# Hadoop Cluster
+# Define the groups like: 
+# alias=[hostname] host=[IP addr] [user] 
+#################################################################
+
+[hadoop]
+node1 ansible_host=192.168.33.10 ansible_user=vagrant 
+node2 ansible_host=192.168.33.11 ansible_user=vagrant 
+node3 ansible_host=192.168.33.12 ansible_user=vagrant 
+
+[resourcemanager]
+node1 ansible_host=192.168.33.10 ansible_user=vagrant 
+
+[namenode]
+node1 ansible_host=192.168.33.10 ansible_user=vagrant 
+
+[secondnamenode]
+node1 ansible_host=192.168.33.10 ansible_user=vagrant 
+
+[datanode]
+node2 ansible_host=192.168.33.11 ansible_user=vagrant 
+node3 ansible_host=192.168.33.12 ansible_user=vagrant  
+
+#Zookeeper
+##################################################################
+[zookeeper]
+node1 ansible_host=192.168.33.10 ansible_user=vagrant

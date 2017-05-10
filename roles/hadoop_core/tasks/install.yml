@@ -1,0 +1,54 @@
+---
+# Download Install & Set envs
+- name: Hadoop | Download hadoop
+  get_url:
+    url: "{{ hadoop_download_url }}"
+    dest: /tmp/
+    remote_src: yes
+    validate_certs: no
+
+- name: Hadoop | Unzip hadoop package
+  unarchive:
+    src: "/tmp/hadoop-{{ hadoop_version }}.tar.gz"
+    dest: /opt/
+    copy: no
+
+- name: Hadoop | Remove hadoop env vars
+  lineinfile:
+    path: "/root/.bashrc"
+    regexp: "^{{item['prefix']}}"
+    state: absent
+  with_items: "{{ hadoop_env_vars }}"
+
+- name: Hadoop | Add hadoop env vars
+  lineinfile:
+    path: "/root/.bashrc"
+    line: "{{ item['prefix']+item['sufix'] }}"
+    insertafter: EOF
+    state: present
+  with_items: "{{ hadoop_env_vars }}"
+
+# Config files
+- name: Hadoop | Overwrite core-site.xml
+  template:
+    src: core-site.xml.j2
+    dest: "{{ hadoop_home }}/etc/hadoop/core-site.xml"
+    force: yes
+
+- name: Hadoop | Overwrite hdfs-site.xml
+  template:
+    src: hdfs-site.xml.j2
+    dest: "{{ hadoop_home }}/etc/hadoop/hdfs-site.xml"
+    force: yes
+
+- name: Hadoop | Overwrite mapred-site.xml
+  template:
+    src: mapred-site.xml.j2
+    dest: "{{ hadoop_home }}/etc/hadoop/mapred-site.xml"
+    force: yes
+
+- name: Hadoop | Overwrite yarn-site.xml
+  template:
+    src: yarn-site.xml.j2
+    dest: "{{ hadoop_home }}/etc/hadoop/yarn-site.xml"
+    force: yes

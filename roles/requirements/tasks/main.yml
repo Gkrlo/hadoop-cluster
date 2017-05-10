@@ -1,0 +1,19 @@
+---
+- name: Requirements | Install some packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "apt-transport-https"
+    - "wget"
+    - "tar"
+    - "unzip"
+  tags:
+    - requirements
+
+- include_role:
+    name: java
+  tags:
+    - requirements
+
