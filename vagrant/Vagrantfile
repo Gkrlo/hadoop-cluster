@@ -12,16 +12,14 @@ VB_NUM_MEM      = 2048
 BOX             = "ARTACK/debian-jessie"
 
 Vagrant.configure(API_VERSION) do |config|
-  
+
   config.vm.define "node1" do |node1|
 
-    node1.ssh.username = 'root'
-    node1.ssh.password = 'vagrant'
     node1.vm.box = BOX
     node1.vm.network "private_network", ip: "192.168.33.10"
     node1.vm.hostname = 'node1'
     node1.vm.network :forwarded_port, guest: 22, host: 2221, id: 'ssh'
-    
+
     node1.vm.provider :virtualbox do |vb|
           vb.customize ["modifyvm", :id, "--memory", VB_NUM_MEM]
           vb.customize ["modifyvm", :id, "--cpus", VB_NUM_CPU]
@@ -30,9 +28,7 @@ Vagrant.configure(API_VERSION) do |config|
   end
 
   config.vm.define "node2" do |node2|
-    
-    node2.ssh.username = 'root'
-    node2.ssh.password = 'vagrant'
+
     node2.vm.box = BOX
     node2.vm.network "private_network", ip: "192.168.33.11"
     node2.vm.hostname = 'node2'
@@ -47,8 +43,6 @@ Vagrant.configure(API_VERSION) do |config|
 
   config.vm.define "node3" do |node3|
 
-    node3.ssh.username = 'root'
-    node3.ssh.password = 'vagrant'
     node3.vm.box = BOX
     node3.vm.network "private_network", ip: "192.168.33.12"
     node3.vm.hostname = 'node3'
@@ -59,6 +53,6 @@ Vagrant.configure(API_VERSION) do |config|
           vb.customize ["modifyvm", :id, "--cpus", VB_NUM_CPU]
     end
 
-  end 
+  end
 
 end

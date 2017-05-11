@@ -26,7 +26,7 @@
     state: present
   tags:
   - requirements
-  
+
 
 - name: Requirements | Create hadoop user
   user:
@@ -36,7 +36,7 @@
     shell: /bin/bash
     generate_ssh_key: yes
     ssh_key_bits: 2048
-    groups: 
+    groups:
       - "{{ hadoop_user }}"
       - sudo
   tags:
@@ -47,9 +47,9 @@
 - name: Requirements | Remove similar IPs in hosts file
   lineinfile:
     dest: /etc/hosts
-    regexp: "^{{ hostvars[item].ansible_default_ipv4.address }}"
+    regexp: "^{{ hostvars[item].ansible_eth1.ipv4.address }}"
     state: absent
-  when: hostvars[ item ].ansible_default_ipv4.address is defined
+  when: hostvars[ item ].ansible_eth1.ipv4.address is defined
   with_items: "{{ groups['hadoop'] }}"
   tags:
     - requirements
@@ -57,10 +57,10 @@
 - name: Requirements | Add host in hosts file
   lineinfile:
     dest: /etc/hosts
-    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{item}}"
+    line: "{{ hostvars[item].ansible_eth1.ipv4.address }} {{item}}"
     insertafter: EOF
     state: present
-  when: hostvars[ item ].ansible_default_ipv4.address is defined
+  when: hostvars[ item ].ansible_eth1.ipv4.address is defined
   with_items: "{{ groups['hadoop'] }}"
   tags:
     - requirements
@@ -82,7 +82,7 @@
     - requirements
 
 - name: Requirements | Deploy keys on all servers
-  authorized_key: 
+  authorized_key:
     user: "{{ hadoop_user }}"
     key: "{{ item[0] }}"
   delegate_to: "{{ item[1] }}"
@@ -91,5 +91,3 @@
     - "{{ groups['hadoop'] }}"
   tags:
     - requirements
-
-
