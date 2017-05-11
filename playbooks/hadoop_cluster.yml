@@ -8,9 +8,13 @@
   become: yes
   roles:
     - requirements
+
+- hosts: datanode
+  become: yes
+  roles:
     - hadoop_core
 
-- hosts: namenode, datanode
+- hosts: namenode
   become: yes
   roles:
     - hadoop_namenode

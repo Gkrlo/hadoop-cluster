@@ -1,34 +1,72 @@
 ---
-# Download Install & Set envs
+# Download (only if not downloaded yet) & Install
+- name: Hadoop | Verify zip is already downloaded
+  stat:
+    path: "/tmp/hadoop-{{ hadoop_version }}.tar.gz"
+  register: st_hadoop_downloaded
+
 - name: Hadoop | Download hadoop
   get_url:
     url: "{{ hadoop_download_url }}"
     dest: /tmp/
     remote_src: yes
     validate_certs: no
+  when: st_hadoop_downloaded.stat.exists == False
 
 - name: Hadoop | Unzip hadoop package
   unarchive:
     src: "/tmp/hadoop-{{ hadoop_version }}.tar.gz"
     dest: /opt/
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
     copy: no
 
+
+# Set envs variables in ~/.bashrc & profile
 - name: Hadoop | Remove hadoop env vars
   lineinfile:
-    path: "/root/.bashrc"
+    path: "/home/{{ hadoop_user }}/.bashrc"
     regexp: "^{{item['prefix']}}"
     state: absent
   with_items: "{{ hadoop_env_vars }}"
 
-- name: Hadoop | Add hadoop env vars
+- name: Hadoop | Add hadoop envs ~/.bashrc
   lineinfile:
-    path: "/root/.bashrc"
+    path: "/home/{{ hadoop_user }}/.bashrc"
     line: "{{ item['prefix']+item['sufix'] }}"
     insertafter: EOF
     state: present
   with_items: "{{ hadoop_env_vars }}"
 
+- name: Hadoop | Add hadoop envs /etc/profile
+  shell: "cp /home/{{ hadoop_user }}/.bashrc /etc/profile"
+  args:
+    executable: /bin/bash
+
+- name: Hadoop | Add hadoop envs ~/.profile
+  shell: "cp /home/{{ hadoop_user }}/.bashrc ~/.profile"
+  args:
+    executable: /bin/bash
+
+
 # Config files
+- name: Hadoop | Remove JAVA_HOME in hadoop-env
+  lineinfile:
+    path: "{{ hadoop_home }}/etc/hadoop/hadoop-env.sh"
+    regexp: "^{{ item['prefix'] }}"
+    state: absent
+  with_items: 
+    - "{{ hadoop_env_vars[0] }}"
+
+- name: Hadoop | Set JAVA_HOME in hadoop-env
+  lineinfile:
+    path: "{{ hadoop_home }}/etc/hadoop/hadoop-env.sh"
+    line: "{{ item['prefix'] + item['sufix'] }}"
+    insertbefore: BOF
+    state: present
+  with_items: 
+    - "{{ hadoop_env_vars[0] }}"
+  
 - name: Hadoop | Overwrite core-site.xml
   template:
     src: core-site.xml.j2

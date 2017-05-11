@@ -1,32 +1,45 @@
 ---
+- include_role:
+    name: hadoop_core
+
+
 - name: Hadoop | Create masters file
   template:
     src: masters.j2
     dest: "{{ hadoop_home }}/etc/hadoop/masters"
     force: yes
-  when: inventory_hostname == groups['namenode'][0]
+
 
 - name: Hadoop | Create slaves file
   template:
     src: slaves.j2
     dest: "{{ hadoop_home }}/etc/hadoop/slaves"
     force: yes
-  when: inventory_hostname == groups['namenode'][0]
+
 
 - name: Hadoop | Format the namenode
   shell: "yes 'y' | ./hadoop namenode -format"
+  become: yes
+  become_user: "{{ hadoop_user }}"
   args:
     chdir: "{{ hadoop_home }}/bin/"
-  when: inventory_hostname == groups['namenode'][0]
+    executable: /bin/bash
+
 
 - name: Hadoop | Start HDFS
   shell: "yes 'yes' | ./start-dfs.sh"
+  become: yes
+  become_user: "{{ hadoop_user }}"
   args:
     chdir: "{{ hadoop_home }}/sbin"
-  when: inventory_hostname == groups['namenode'][0]
+    executable: /bin/bash
+
 
 - name: Hadoop | Start YARN
   shell: "yes 'yes' | ./start-yarn.sh"
+  become: yes
+  become_user: "{{ hadoop_user }}"
   args:
     chdir: "{{ hadoop_home }}/sbin"
-  when: inventory_hostname == groups['namenode'][0]
+    executable: /bin/bash
+

@@ -1,14 +1,16 @@
 ---
+# Required packages, libs, etc
 - name: Requirements | Install some packages
   apt:
     name: "{{ item }}"
     state: present
     update_cache: yes
   with_items:
-    - "apt-transport-https"
-    - "wget"
-    - "tar"
-    - "unzip"
+    - apt-transport-https
+    - wget
+    - tar
+    - unzip
+    - rsync
   tags:
     - requirements
 
@@ -16,4 +18,78 @@
     name: java
   tags:
     - requirements
+
+# Create Hadoop group & user
+- name: Requierements | Create hadoop group
+  group:
+    name: "{{ hadoop_user }}"
+    state: present
+  tags:
+  - requirements
+  
+
+- name: Requirements | Create hadoop user
+  user:
+    name: "{{ hadoop_user }}"
+    password: "{{ hadoop_user | password_hash('sha512') }}"
+    state: present
+    shell: /bin/bash
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    groups: 
+      - "{{ hadoop_user }}"
+      - sudo
+  tags:
+  - requirements
+
+
+# Pre-configuration
+- name: Requirements | Remove similar IPs in hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "^{{ hostvars[item].ansible_default_ipv4.address }}"
+    state: absent
+  when: hostvars[ item ].ansible_default_ipv4.address is defined
+  with_items: "{{ groups['hadoop'] }}"
+  tags:
+    - requirements
+
+- name: Requirements | Add host in hosts file
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{item}}"
+    insertafter: EOF
+    state: present
+  when: hostvars[ item ].ansible_default_ipv4.address is defined
+  with_items: "{{ groups['hadoop'] }}"
+  tags:
+    - requirements
+
+# - name: Hadoop | Generate SSH key
+#   shell: 'ssh-keygen -b 2048 -t rsa -f /home/{{ hadoop_user }}/.ssh/id_rsa -q -N ""'
+#   args:
+#     creates: /home/{{ hadoop_user }}/.ssh/id_rsa
+
+- name: Requirements | Fetch all public ssh keys
+  shell: cat /home/{{ hadoop_user }}/.ssh/id_rsa.pub
+  register: ssh_keys
+  tags:
+    - requirements
+
+- name: Requirements | Check ssh keys
+  debug: msg="{{ ssh_keys.stdout }}"
+  tags:
+    - requirements
+
+- name: Requirements | Deploy keys on all servers
+  authorized_key: 
+    user: "{{ hadoop_user }}"
+    key: "{{ item[0] }}"
+  delegate_to: "{{ item[1] }}"
+  with_nested:
+    - "{{ ssh_keys.stdout }}"
+    - "{{ groups['hadoop'] }}"
+  tags:
+    - requirements
+
 
