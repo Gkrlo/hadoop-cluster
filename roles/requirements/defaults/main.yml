@@ -1,1 +1,2 @@
 hadoop_user: hadoop
+ansible_eth: ansible_eth0

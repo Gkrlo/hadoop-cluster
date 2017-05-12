@@ -18,7 +18,7 @@
 
 
 - name: Hadoop | Format the namenode
-  shell: "yes 'y' | ./hadoop namenode -format"
+  shell: "yes 'n' | ./hadoop namenode -format"
   become: yes
   become_user: "{{ hadoop_user }}"
   args:
@@ -26,20 +26,4 @@
     executable: /bin/bash
 
 
-- name: Hadoop | Start HDFS
-  shell: "yes 'yes' | ./start-dfs.sh"
-  become: yes
-  become_user: "{{ hadoop_user }}"
-  args:
-    chdir: "{{ hadoop_home }}/sbin"
-    executable: /bin/bash
-
-
-- name: Hadoop | Start YARN
-  shell: "yes 'yes' | ./start-yarn.sh"
-  become: yes
-  become_user: "{{ hadoop_user }}"
-  args:
-    chdir: "{{ hadoop_home }}/sbin"
-    executable: /bin/bash
 

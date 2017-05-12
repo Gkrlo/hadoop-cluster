@@ -10,7 +10,7 @@
     - wget
     - tar
     - unzip
-    - rsync
+    
   tags:
     - requirements
 
@@ -47,9 +47,9 @@
 - name: Requirements | Remove similar IPs in hosts file
   lineinfile:
     dest: /etc/hosts
-    regexp: "^{{ hostvars[item].ansible_eth1.ipv4.address }}"
+    regexp: "^{{ hostvars[item].ansible_eth0.ipv4.address }}"
     state: absent
-  when: hostvars[ item ].ansible_eth1.ipv4.address is defined
+  when: hostvars[ item ].ansible_eth0.ipv4.address is defined
   with_items: "{{ groups['hadoop'] }}"
   tags:
     - requirements
@@ -57,18 +57,13 @@
 - name: Requirements | Add host in hosts file
   lineinfile:
     dest: /etc/hosts
-    line: "{{ hostvars[item].ansible_eth1.ipv4.address }} {{item}}"
+    line: "{{ hostvars[item][ ansible_eth ].ipv4.address }} {{item}}"
     insertafter: EOF
     state: present
-  when: hostvars[ item ].ansible_eth1.ipv4.address is defined
+  when: hostvars[ item ][ ansible_eth ].ipv4.address is defined
   with_items: "{{ groups['hadoop'] }}"
   tags:
     - requirements
-
-# - name: Hadoop | Generate SSH key
-#   shell: 'ssh-keygen -b 2048 -t rsa -f /home/{{ hadoop_user }}/.ssh/id_rsa -q -N ""'
-#   args:
-#     creates: /home/{{ hadoop_user }}/.ssh/id_rsa
 
 - name: Requirements | Fetch all public ssh keys
   shell: cat /home/{{ hadoop_user }}/.ssh/id_rsa.pub
