@@ -1,29 +1,13 @@
-# Hadoop Cluster
+# Big Data cluster
 #################################################################
 
-[hadoop]
-node1 ansible_host=192.168.1.11 ansible_user=root
-node2 ansible_host=192.168.1.12 ansible_user=root
-node3 ansible_host=192.168.1.13 ansible_user=root
-node4 ansible_host=192.168.1.14 ansible_user=root
-
-[datanode]
-node2 ansible_host=192.168.1.12 ansible_user=root
-node3 ansible_host=192.168.1.13 ansible_user=root
-node4 ansible_host=192.168.1.14 ansible_user=root
-
-[namenode]
-node1 ansible_host=192.168.1.11 ansible_user=root
-
-[secondnamenode]
-node1 ansible_host=192.168.1.11 ansible_user=root
-
-[resourcemanager]
-node1 ansible_host=192.168.1.11 ansible_user=root
-
-
+[nodes]
+node1 ansible_host=192.168.1.101 ansible_user=root
+node2 ansible_host=192.168.1.102 ansible_user=root
+node3 ansible_host=192.168.1.103 ansible_user=root
+node4 ansible_host=192.168.1.104 ansible_user=root
 
 #Zookeeper
 ##################################################################
 [zookeeper]
-node1 ansible_host=192.168.1.11 ansible_user=root
+node1 ansible_host=192.168.1.101 ansible_user=root

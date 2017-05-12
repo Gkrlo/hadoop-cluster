@@ -1,0 +1,6 @@
+---
+- include: core.yml
+  when: inventory_hostname in datanode_hosts
+
+- include: namenode.yml 
+  when: inventory_hostname in namenode_hosts

@@ -1,6 +1,6 @@
 ---
 # Required packages, libs, etc
-- name: Requirements | Install some packages
+- name: Install some packages
   apt:
     name: "{{ item }}"
     state: present
@@ -10,17 +10,17 @@
     - wget
     - tar
     - unzip
-    
   tags:
     - requirements
 
+# Java-role included
 - include_role:
     name: java
   tags:
     - requirements
 
 # Create Hadoop group & user
-- name: Requierements | Create hadoop group
+- name: Create hadoop group
   group:
     name: "{{ hadoop_user }}"
     state: present
@@ -28,7 +28,7 @@
   - requirements
 
 
-- name: Requirements | Create hadoop user
+- name: Create hadoop user
   user:
     name: "{{ hadoop_user }}"
     password: "{{ hadoop_user | password_hash('sha512') }}"
@@ -44,45 +44,45 @@
 
 
 # Pre-configuration
-- name: Requirements | Remove similar IPs in hosts file
+- name: Remove similar IPs in hosts file
   lineinfile:
     dest: /etc/hosts
     regexp: "^{{ hostvars[item].ansible_eth0.ipv4.address }}"
     state: absent
   when: hostvars[ item ].ansible_eth0.ipv4.address is defined
-  with_items: "{{ groups['hadoop'] }}"
+  with_items: "{{ groups['nodes'] }}"
   tags:
     - requirements
 
-- name: Requirements | Add host in hosts file
+- name: Add host in hosts file
   lineinfile:
     dest: /etc/hosts
     line: "{{ hostvars[item][ ansible_eth ].ipv4.address }} {{item}}"
     insertafter: EOF
     state: present
   when: hostvars[ item ][ ansible_eth ].ipv4.address is defined
-  with_items: "{{ groups['hadoop'] }}"
+  with_items: "{{ groups['nodes'] }}"
   tags:
     - requirements
 
-- name: Requirements | Fetch all public ssh keys
+- name: Fetch all public ssh keys
   shell: cat /home/{{ hadoop_user }}/.ssh/id_rsa.pub
   register: ssh_keys
   tags:
     - requirements
 
-- name: Requirements | Check ssh keys
+- name: Check ssh keys
   debug: msg="{{ ssh_keys.stdout }}"
   tags:
     - requirements
 
-- name: Requirements | Deploy keys on all servers
+- name: Deploy keys on all servers
   authorized_key:
     user: "{{ hadoop_user }}"
     key: "{{ item[0] }}"
   delegate_to: "{{ item[1] }}"
   with_nested:
     - "{{ ssh_keys.stdout }}"
-    - "{{ groups['hadoop'] }}"
+    - "{{ groups['nodes'] }}"
   tags:
     - requirements

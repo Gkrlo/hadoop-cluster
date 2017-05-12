@@ -1,23 +1,21 @@
 ---
-- include_role:
-    name: hadoop_core
+- include: core.yml
 
-
-- name: Hadoop | Create masters file
+- name: Namenode | Create masters file
   template:
     src: masters.j2
     dest: "{{ hadoop_home }}/etc/hadoop/masters"
     force: yes
 
 
-- name: Hadoop | Create slaves file
+- name: Namenode | Create slaves file
   template:
     src: slaves.j2
     dest: "{{ hadoop_home }}/etc/hadoop/slaves"
     force: yes
 
 
-- name: Hadoop | Format the namenode
+- name: Namenode | Format the namenode
   shell: "yes 'n' | ./hadoop namenode -format"
   become: yes
   become_user: "{{ hadoop_user }}"
