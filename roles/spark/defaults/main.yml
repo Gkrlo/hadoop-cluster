@@ -1,0 +1,18 @@
+---
+# Spark hosts (clients) machines
+spark_hosts: [ node1 ]
+
+# Configuration
+hadoop_user: hadoop
+spark_version: 2.1.1
+hadoop_pre_built: 2.7
+hadoop_home: "/opt/hadoop-{{ hadoop_version }}"
+spark_home: "/opt/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}"
+spark_download_url: "http://ftp.cixug.es/apache/spark/spark-2.1.1/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}.tgz"
+spark_env_vars:
+  - { prefix: "export SPARK_HOME", sufix: "={{ spark_home }}" }
+  - { prefix: "export PATH=$PATH:$SPARK_HOME/bin", sufix: ""}
+spark_conf_env_vars:
+  - { prefix: "export HADOOP_CONF_DIR", sufix: "={{ hadoop_home }}/etc/hadoop" }
+  - { prefix: "export YARN_CONF_DIR", sufix: "={{ hadoop_home }}/etc/hadoop" }
+

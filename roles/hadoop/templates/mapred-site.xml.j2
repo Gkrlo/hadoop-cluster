@@ -6,6 +6,22 @@
 <value>yarn</value>
 </property>
 <property>
+<name>mapreduce.map.memory.mb</name>
+<value>256</value>
+</property>
+<property>
+<name>mapreduce.reduce.memory.mb</name>
+<value>384</value>
+</property>
+<property>
+<name>mapreduce.map.java.opts</name>
+<value>-Xmx192m</value>
+</property>
+<property>
+<name>mapreduce.reduce.java.opts</name>
+<value>-Xmx256m</value>
+</property>
+<property>
 <name>mapreduce.jobhistory.address</name>
 <value>{{ namenode_hosts[0] }}:10020</value>
 </property>

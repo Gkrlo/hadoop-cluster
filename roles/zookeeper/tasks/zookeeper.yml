@@ -1,10 +1,23 @@
 ---
+# Download (only if not downloaded yet) & Install
+- name: Zookeeper | Verify tar.gz is already downloaded
+  stat:
+    path: "/tmp/zookeeper-{{ zookeeper_version }}.tar.gz"
+  register: st_zk_downloaded
+
 - name: Zookeper | Download package
   get_url:
     url: "{{ zookeeper_url }}-{{ zookeeper_version }}.tar.gz"
     dest: /tmp/
     remote_src: yes
     validate_certs: no
+  when: st_zk_downloaded.stat.exists == False
+
+- name: Zookeeper | Unzip Zk tar
+  unarchive:
+    src: "/tmp/zookeeper-{{ zookeeper_version }}.tar.gz"
+    dest: "/opt/"
+    copy: no
 
 - name: Zookeeper | Ensure ZK folder exists
   file:
@@ -13,12 +26,6 @@
   with_items:
     - "{{ zookeeper_datadir }}"
     - "{{ zookeeper_logdir }}"
-
-- name: Zookeeper | Unzip Zk tar
-  unarchive:
-    src: "/tmp/zookeeper-{{ zookeeper_version }}.tar.gz"
-    dest: "/opt/"
-    copy: no
 
 - name: Zookeeper | Overwrite zoo.conf
   template:

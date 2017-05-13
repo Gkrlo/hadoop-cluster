@@ -1,0 +1,73 @@
+---
+# Download (only if not downloaded yet) & Install
+- name: Spark | Verify tar.gz is already downloaded
+  stat:
+    path: "/tmp/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}.tgz"
+  register: st_spark_downloaded
+
+- name: Spark | Download hadoop
+  get_url:
+    url: "{{ spark_download_url }}"
+    dest: /tmp/
+    remote_src: yes
+    validate_certs: no
+  when: st_spark_downloaded.stat.exists == False
+
+- name: Spark | Unzip spark package
+  unarchive:
+    src: "/tmp/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}.tgz"
+    dest: /opt/
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
+    copy: no
+
+
+# Set envs variables in ~/.bashrc & profile
+- name: Spark | Remove hadoop env vars
+  lineinfile:
+    path: "/home/{{ hadoop_user }}/.bashrc"
+    regexp: "^{{item['prefix']}}"
+    state: absent
+  with_items: "{{ spark_env_vars }}"
+
+- name: Spark | Add hadoop envs ~/.bashrc
+  lineinfile:
+    path: "/home/{{ hadoop_user }}/.bashrc"
+    line: "{{ item['prefix']+item['sufix'] }}"
+    insertafter: EOF
+    state: present
+  with_items: "{{ spark_env_vars }}"
+
+- name: Spark | Copy .bashrc to /etc/profile
+  shell: "cp /home/{{ hadoop_user }}/.bashrc /etc/profile"
+  args:
+    executable: /bin/bash
+
+- name: Spark | Copy .bashrc to ~/.profile
+  shell: "cp /home/{{ hadoop_user }}/.bashrc ~/.profile"
+  args:
+    executable: /bin/bash
+
+
+# Config files
+- name: Spark | Ensure spark-env.sh is created
+  file:
+    path: "{{ spark_home }}/conf/spark-env.sh"
+    state: touch
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
+
+- name: Spark | Remove YARN env vars in spark-env.sh
+  lineinfile:
+    path: "{{ spark_home }}/conf/spark-env.sh"
+    regexp: "^{{ item['prefix'] }}"
+    state: absent
+  with_items: "{{ spark_conf_env_vars }}"
+
+- name: Spark | Set spark YARN env vars in spark-env.sh-env
+  lineinfile:
+    path: "{{ spark_home }}/conf/spark-env.sh"
+    line: "{{ item['prefix'] + item['sufix'] }}"
+    insertbefore: BOF
+    state: present
+  with_items: "{{ spark_conf_env_vars }}"

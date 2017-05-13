@@ -21,6 +21,9 @@ hadoop_env_vars:
   - { prefix: "export HADOOP_HDFS_HOME", sufix: "=$HADOOP_HOME" }
   - { prefix: "export YARN_HOME", sufix: "=$HADOOP_HOME" }
   - { prefix: "export PATH=$PATH:$HADOOP_HOME/bin", sufix: ""}
+hadoop_conf_env_vars:
+  - { prefix: "export JAVA_HOME", sufix: "={{ hadoop_java_home }}" }
+  - { prefix: "export HADOOP_HEAPSIZE", sufix: "=384" }
 
 
 

@@ -6,6 +6,14 @@
 <value>mapreduce_shuffle</value>
 </property>
 <property>
+<name>yarn.nodemanager.resource.memory-mb</name>
+<value>512</value>
+</property>
+<property>
+<name>yarn.scheduler.minimum-allocation-mb</name>
+<value>128</value>
+</property>
+<property>
 <name>yarn.resourcemanager.resource-tracker.address</name>
 <value>{{ resourcemanager_host }}:8025</value>
 </property>

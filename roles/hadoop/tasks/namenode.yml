@@ -1,27 +1,19 @@
 ---
 - include: core.yml
 
-- name: Namenode | Create masters file
+- name: Hadoop | Create masters file
   template:
     src: masters.j2
     dest: "{{ hadoop_home }}/etc/hadoop/masters"
     force: yes
 
 
-- name: Namenode | Create slaves file
+- name: Hadoop | Create slaves file
   template:
     src: slaves.j2
     dest: "{{ hadoop_home }}/etc/hadoop/slaves"
     force: yes
 
-
-- name: Namenode | Format the namenode
-  shell: "yes 'n' | ./hadoop namenode -format"
-  become: yes
-  become_user: "{{ hadoop_user }}"
-  args:
-    chdir: "{{ hadoop_home }}/bin/"
-    executable: /bin/bash
 
 
 
