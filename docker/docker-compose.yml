@@ -3,40 +3,40 @@ version: '2'
 services:
 
   node1:
-    image: gkrlodebian
+    image: bigdatadebian
     hostname: node1
     ports:
       - "2221:22"
     networks:
       mynet:
-        ipv4_address: 192.168.33.10
+        ipv4_address: 192.168.33.11
 
   node2:
-    image: gkrlodebian
+    image: bigdatadebian
     hostname: node2
     ports:
       - "2222:22"
     networks:
       mynet:
-        ipv4_address: 192.168.33.11
+        ipv4_address: 192.168.33.12
 
   node3:
-    image: gkrlodebian
+    image: bigdatadebian
     hostname: node3
     ports:
       - "2223:22"
     networks:
       mynet:
-        ipv4_address: 192.168.33.12
+        ipv4_address: 192.168.33.13
 
   node4:
-    image: gkrlodebian
+    image: bigdatadebian
     hostname: node4
     ports:
-      "2224:22"
+      - "2224:22"
     networks:
       mynet:
-        ipv4_address: 192.168.33.13
+        ipv4_address: 192.168.33.14
 
 networks:
   mynet:

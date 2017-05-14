@@ -56,7 +56,7 @@
   with_items: "{{ groups['nodes'] }}"
   tags:
     - requirements
-    - no_docker
+    - no4docker
 
 - name: Add host in hosts file
   lineinfile:
@@ -68,7 +68,7 @@
   with_items: "{{ groups['nodes'] }}"
   tags:
     - requirements
-    - no_docker
+    - no4docker
 
 - name: Fetch all public ssh keys
   shell: cat /home/{{ hadoop_user }}/.ssh/id_rsa.pub

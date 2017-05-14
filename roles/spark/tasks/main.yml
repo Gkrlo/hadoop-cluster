@@ -1,8 +1,8 @@
 ---
 - name: Spark | Installing some dependencies
   apt:
-    name: item
-  with_items: "{{ spark_dependecies }}"
+    name: "{{ item }}"
+  with_items: "{{ spark_dependencies }}"
 
 - include: spark_yarn.yml
   when: inventory_hostname in spark_hosts

@@ -1,4 +1,4 @@
 #!/bin/bash
 
 #Build the docker image
-docker build -t gkrlodebian .
+docker build -t bigdatadebian .
