@@ -2,20 +2,20 @@
 # Download (only if not downloaded yet) & Install
 - name: Zookeeper | Verify tar.gz is already downloaded
   stat:
-    path: "/tmp/zookeeper-{{ zookeeper_version }}.tar.gz"
+    path: "/home/{{ hadoop_user }}/zookeeper-{{ zookeeper_version }}.tar.gz"
   register: st_zk_downloaded
 
 - name: Zookeper | Download package
   get_url:
     url: "{{ zookeeper_url }}-{{ zookeeper_version }}.tar.gz"
-    dest: /tmp/
+    dest: /home/{{ hadoop_user }}/
     remote_src: yes
     validate_certs: no
   when: st_zk_downloaded.stat.exists == False
 
 - name: Zookeeper | Unzip Zk tar
   unarchive:
-    src: "/tmp/zookeeper-{{ zookeeper_version }}.tar.gz"
+    src: "/home/{{ hadoop_user }}/zookeeper-{{ zookeeper_version }}.tar.gz"
     dest: "/opt/"
     copy: no
 

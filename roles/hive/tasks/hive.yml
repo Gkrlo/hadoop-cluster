@@ -1,0 +1,50 @@
+---
+# Download (only if not downloaded yet) & Install
+- name: Hive | Verify tar.gz is already downloaded
+  stat:
+    path: "/home/{{ hadoop_user }}//apache-hive-{{ hive_version }}-bin.tar.gz"
+  register: st_hive_downloaded
+
+- name: Hive | Download hadoop
+  get_url:
+    url: "{{ hive_download_url }}"
+    dest: /home/{{ hadoop_user }}/
+    remote_src: yes
+    validate_certs: no
+  when: st_hive_downloaded.stat.exists == False
+
+- name: Hive | Unzip Hive package
+  unarchive:
+    src: "/home/{{ hadoop_user }}/apache-hive-{{ hive_version }}-bin.tar.gz"
+    dest: /opt/
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
+    copy: no
+
+
+# Set envs variables in ~/.bashrc & profile
+- name: Hive | Remove hadoop env vars
+  lineinfile:
+    path: "/home/{{ hadoop_user }}/.bashrc"
+    regexp: "^{{item['prefix']}}"
+    state: absent
+  with_items: "{{ hive_env_vars }}"
+
+- name: Hive | Add hadoop envs ~/.bashrc
+  lineinfile:
+    path: "/home/{{ hadoop_user }}/.bashrc"
+    line: "{{ item['prefix']+item['sufix'] }}"
+    insertafter: EOF
+    state: present
+  with_items: "{{ hive_env_vars }}"
+
+- name: Hive | Copy .bashrc to /etc/profile
+  shell: "cp /home/{{ hadoop_user }}/.bashrc /etc/profile"
+  args:
+    executable: /bin/bash
+
+- name: Hive | Copy .bashrc to ~/.profile
+  shell: "cp /home/{{ hadoop_user }}/.bashrc ~/.profile"
+  args:
+    executable: /bin/bash
+

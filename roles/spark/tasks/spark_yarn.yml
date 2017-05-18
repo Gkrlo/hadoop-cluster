@@ -2,20 +2,20 @@
 # Download (only if not downloaded yet) & Install
 - name: Spark | Verify tar.gz is already downloaded
   stat:
-    path: "/tmp/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}.tgz"
+    path: "/home/{{ hadoop_user }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}.tgz"
   register: st_spark_downloaded
 
 - name: Spark | Download hadoop
   get_url:
     url: "{{ spark_download_url }}"
-    dest: /tmp/
+    dest: /home/{{ hadoop_user }}/
     remote_src: yes
     validate_certs: no
   when: st_spark_downloaded.stat.exists == False
 
 - name: Spark | Unzip spark package
   unarchive:
-    src: "/tmp/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}.tgz"
+    src: "/home/{{ hadoop_user }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}.tgz"
     dest: /opt/
     group: "{{ hadoop_user }}"
     owner: "{{ hadoop_user }}"
