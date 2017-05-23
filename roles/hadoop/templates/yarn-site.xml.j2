@@ -18,6 +18,10 @@
 <value>{{ resourcemanager_host }}:8025</value>
 </property>
 <property>
+<name>yarn.resourcemanager.scheduler.class</name>
+<value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.fair.FairScheduler</value>
+</property>
+<property>
 <name>yarn.resourcemanager.scheduler.address</name>
 <value>{{ resourcemanager_host }}:8030</value>
 </property>

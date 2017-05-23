@@ -7,13 +7,46 @@
     dest: "{{ hadoop_home }}/etc/hadoop/masters"
     force: yes
 
-
 - name: Hadoop | Create slaves file
   template:
     src: slaves.j2
     dest: "{{ hadoop_home }}/etc/hadoop/slaves"
     force: yes
 
+- name: Hadoop | Format the namenode
+  shell: "yes 'n' | ./hadoop namenode -format"
+  become: yes
+  become_user: "{{ hadoop_user }}"
+  ignore_errors: yes
+  args:
+    chdir: "{{ hadoop_home }}/bin/"
 
+- name: Hadoop | Stop hdfs
+  shell: "./stop-dfs.sh"
+  become: yes
+  become_user: "{{ hadoop_user }}"
+  args:
+    chdir: "{{ hadoop_home }}/sbin"
+
+- name: Hadoop | Start hdfs
+  shell: "./start-dfs.sh"
+  become: yes
+  become_user: "{{ hadoop_user }}"
+  args:
+    chdir: "{{ hadoop_home }}/sbin"
+
+- name: Hadoop | Stop YARN
+  shell: "./stop-yarn.sh"
+  become: yes
+  become_user: "{{ hadoop_user }}"
+  args:
+    chdir: "{{ hadoop_home }}/sbin"
+
+- name: Hadoop | Start YARN
+  shell: "./start-yarn.sh"
+  become: yes
+  become_user: "{{ hadoop_user }}"
+  args:
+    chdir: "{{ hadoop_home }}/sbin"
 
 

@@ -1,6 +1,6 @@
 ---
 # Required packages, libs, etc
-- name: Install some packages
+- name: Requirements | Install some packages
   apt:
     name: "{{ item }}"
     state: present
@@ -10,26 +10,24 @@
     - wget
     - tar
     - unzip
-    - rsync
+    - sudo
   tags:
     - requirements
 
-# Java-role included
 - include_role:
     name: java
   tags:
     - requirements
 
 # Create Hadoop group & user
-- name: Create hadoop group
+- name: Requirements | Create hadoop group
   group:
     name: "{{ hadoop_user }}"
     state: present
   tags:
   - requirements
 
-
-- name: Create hadoop user
+- name: Requirements | Create hadoop user
   user:
     name: "{{ hadoop_user }}"
     password: "{{ hadoop_user | password_hash('sha512') }}"
@@ -47,7 +45,7 @@
 # Pre-configuration
 # Docker dont let you modify etc/hosts. For containers
 # run the playbook with --skip-tags "no_docker"
-- name: Remove similar IPs in hosts file
+- name: Requirements | Remove similar IPs in hosts file
   lineinfile:
     dest: /etc/hosts
     regexp: "^{{ hostvars[item].ansible_eth0.ipv4.address }}"
@@ -58,7 +56,7 @@
     - requirements
     - no4docker
 
-- name: Add host in hosts file
+- name: Requirements | Add host in hosts file
   lineinfile:
     dest: /etc/hosts
     line: "{{ hostvars[item][ ansible_eth ].ipv4.address }} {{item}}"
@@ -69,6 +67,47 @@
   tags:
     - requirements
     - no4docker
+    
+- name : Requirements | remove StrictHostKeyChecking line
+  lineinfile:
+    dest: /etc/ssh/ssh_config
+    regexp: "StrictHostKeyChecking"
+    state: absent
+  tags:
+    - requirements
+
+- name: Requirements | Set StrictHostKeyChecking
+  lineinfile:
+    dest: /etc/ssh/ssh_config
+    line: "StrictHostKeyChecking no"
+    insertafter: EOF
+    state: present
+  tags:
+    - requirements
+
+- name: Requirements | Ensure .ssh/config is created
+  file:
+    path: "/home/{{ hadoop_user }}/.ssh/config"
+    state: touch
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
+
+- name : Requirements | remove UserKnownHostsFile line
+  lineinfile:
+    dest: /home/{{ hadoop_user }}/.ssh/config
+    regexp: "UserKnownHostsFile"
+    state: absent
+  tags:
+    - requirements
+
+- name: Requirements | Set UserKnownHostsFile
+  lineinfile:
+    dest: /home/{{ hadoop_user }}/.ssh/config
+    line: "UserKnownHostsFile /dev/null"
+    insertafter: EOF
+    state: present
+  tags:
+    - requirements
 
 - name: Fetch all public ssh keys
   shell: cat /home/{{ hadoop_user }}/.ssh/id_rsa.pub
