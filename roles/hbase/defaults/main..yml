@@ -1,0 +1,22 @@
+---
+# Hadoop hosts machines
+datanode_hosts: [ node2, node3, node4 ]
+namenode_hosts: [ node1, node1 ] #[namenode, secondnamenode]
+resourcemanager_host: node1
+
+# Configuration
+hbase_version: 1.2.5
+hadoop_download_url: "http://apache.rediris.es/hbase/stable/hbase-{{ hbase_version }}-bin.tar.gz"
+hadoop_user: hadoop
+hadoop_home: "/opt/hadoop-{{ hadoop_version }}"
+java_home: "/usr/lib/jvm/java-8-oracle/"
+hadoop_env_vars:
+hbase_env_vars:
+  - { prefix: "export HBASE_HOME", sufix: "={{ hbase_home }}" }
+  - { prefix: "export HBASE_HOME", sufix: "={{ hbase_home }}" }
+  - { prefix: "export PATH=$PATH:$HIVE_HOME/bin", sufix: ""}
+hbase_conf_env_vars:
+  - { prefix: "export JAVA_HOME", sufix: "={{ java_home }}" }
+
+
+

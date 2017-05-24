@@ -5,7 +5,7 @@
     path: "/home/{{ hadoop_user }}//apache-hive-{{ hive_version }}-bin.tar.gz"
   register: st_hive_downloaded
 
-- name: Hive | Download hadoop
+- name: Hive | Download hive
   get_url:
     url: "{{ hive_download_url }}"
     dest: /home/{{ hadoop_user }}/
@@ -48,6 +48,7 @@
   args:
     executable: /bin/bash
 
+
 # Create directories
 - name: Hive | Create warehouse_dir in HDFS
   shell: "{{ item }}"
@@ -56,5 +57,36 @@
   args:
     chdir: "{{ hadoop_home }}/bin"
   with_items:
+   - "./hdfs dfs -mkdir -p /tmp"
    - "./hdfs dfs -mkdir -p {{ hive_warehouse_dir }}"
    - "./hdfs dfs -chmod g+w {{ hive_warehouse_dir }}"
+  
+# Config files
+- name: Hive | Ensure hive-env.sh is created
+  file:
+    path: "{{ hive_home }}/conf/hive-env.sh"
+    state: touch
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
+
+- name: Hive | Remove hadoop_home in hive-env.sh
+  lineinfile:
+    path: "{{ hive_home }}/conf/hive-env.sh"
+    regexp: "^{{ item['prefix'] }}"
+    state: absent
+  with_items: "{{ hive_conf_env_vars }}"
+
+- name: Hive | Set hadoop_home in hive-env.sh
+  lineinfile:
+    path: "{{ hive_home }}/conf/hive-env.sh"
+    line: "{{ item['prefix'] + item['sufix'] }}"
+    insertbefore: BOF
+    state: present
+  with_items: "{{ hive_conf_env_vars }}"
+
+- name: Hive | Create hive-site.xml
+  template:
+    src: hive-site.xml.j2
+    dest: "{{ hive_home }}/conf/hive-site.xml"
+    force: yes
+

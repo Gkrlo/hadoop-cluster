@@ -128,3 +128,16 @@
     group: "{{ hadoop_user }}"
     owner: "{{ hadoop_user }}"
   when: st_datanode_dir.stat.exists == False 
+
+- name: Hadoop | Start datanode services
+  shell: "{{ item }}"
+  become: yes
+  become_user: "{{ hadoop_user }}"
+  args:
+    chdir: "{{ hadoop_home }}/sbin"
+  with_items:
+    - "./hadoop-daemon.sh stop datanode"
+    - "./hadoop-daemon.sh start datanode"
+    - "./yarn-daemon.sh stop nodemanager"
+    - "./yarn-daemon.sh start nodemanager"
+  when: inventory_hostname in datanode_hosts

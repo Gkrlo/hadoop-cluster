@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+<!-- Hive Configuration can either be stored in this file or in the hadoop configuration files  -->
+<!-- that are implied by Hadoop setup variables.                                                -->
+<!-- Aside from Hadoop setup variables - this file is provided as a convenience so that Hive    -->
+<!-- users do not have to edit hadoop configuration files (that may be managed as a centralized -->
+<!-- resource).                                                                                 -->
+
+<!-- Hive Execution Parameters -->
+<property>
+  <name>hive.execution.engine</name>
+  <value>spark</value>
+  <description>Chooses execution engine. Options are: mr (Map reduce, default), tez (hadoop 2 only), spark</description>
+</property>
+
+<property>
+  <name>spark.master</name>
+  <value>yarn</value>
+</property>
+
+<property>
+  <name>spark.submit.deployMode</name>
+  <value>cluster</value>
+</property>
+
+<property>
+  <name>spark.serializer</name>
+  <value>org.apache.spark.serializer.KryoSerializer</value>
+</property>
+
+<property>
+  <name>spark.akka.logLifecycleEvents</name>
+  <value>true</value>
+</property>
+
+<property>
+  <name>hive.spark.log.dir</name>
+  <value>${spark.home}/logs/</value>
+</property>
+
+<property>
+  <name>spark.driver.extraClassPath</name>
+  <value>${maven.local.repository}/org/apache/hive/hive-it-util/${hive.version}/hive-it-util-${hive.version}.jar:${maven.local.repository}/org/apache/hive/hive-exec/${hive.version}/hive-exec-${hive.version}.jar</value>
+</property>
+
+<property>
+  <name>spark.executor.instances</name>
+  <value>2</value>
+</property>
+
+<property>
+  <name>spark.executor.cores</name>
+  <value>2</value>
+</property>
+
+<property>
+  <name>spark.executor.memory</name>
+  <value>512m</value>
+</property>
+
+<property>
+  <name>spark.yarn.executor.memoryOverhead</name>
+  <value>0</value>
+</property>
+
+<property>
+  <name>spark.driver.memory</name>
+  <value>512m</value>
+</property>
+
+<property>
+  <name>spark.yarn.driver.memoryOverhead</name>
+  <value>0</value>
+</property>
+
+<property>
+  <name>spark.testing</name>
+  <value>true</value>
+</property>
+
+<property>
+  <name>hive.spark.client.connect.timeout</name>
+  <value>30000ms</value>
+</property>
+
+</configuration>

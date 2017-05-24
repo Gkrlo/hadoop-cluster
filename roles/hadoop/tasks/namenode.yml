@@ -21,32 +21,15 @@
   args:
     chdir: "{{ hadoop_home }}/bin/"
 
-- name: Hadoop | Stop hdfs
-  shell: "./stop-dfs.sh"
+- name: Hadoop | Start namenode services
+  shell: "{{ item }}"
   become: yes
   become_user: "{{ hadoop_user }}"
   args:
     chdir: "{{ hadoop_home }}/sbin"
-
-- name: Hadoop | Start hdfs
-  shell: "./start-dfs.sh"
-  become: yes
-  become_user: "{{ hadoop_user }}"
-  args:
-    chdir: "{{ hadoop_home }}/sbin"
-
-- name: Hadoop | Stop YARN
-  shell: "./stop-yarn.sh"
-  become: yes
-  become_user: "{{ hadoop_user }}"
-  args:
-    chdir: "{{ hadoop_home }}/sbin"
-
-- name: Hadoop | Start YARN
-  shell: "./start-yarn.sh"
-  become: yes
-  become_user: "{{ hadoop_user }}"
-  args:
-    chdir: "{{ hadoop_home }}/sbin"
-
+  with_items:
+    - "./hadoop-daemon.sh stop namenode"
+    - "./hadoop-daemon.sh start namenode"
+    - "./yarn-daemon.sh stop resourcemanager"
+    - "./yarn-daemon.sh start resourcemanager"
 

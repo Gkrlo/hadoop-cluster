@@ -4,12 +4,14 @@ hive_hosts: [ node1 ]
 
 # Configuration
 hadoop_user: hadoop
-hive_version: 2.1.1
 hadoop_home: "/opt/hadoop-{{ hadoop_version }}"
+hive_version: 2.1.1
+hive_download_url: "http://apache.rediris.es/hive/stable-2/hive-{{ hive_version }}/apache-hive-{{ hive_version }}-bin.tar.gz"
 hive_home: "/opt/apache-hive-{{ hive_version }}-bin"
-hive_download_url: "http://ftp.cixug.es/apache/hive/hive-{{ hive_version }}/apache-hive-{{ hive_version }}-bin.tar.gz"
 hive_warehouse_dir: /user/hive/warehouse
 hive_env_vars:
   - { prefix: "export HIVE_HOME", sufix: "={{ hive_home }}" }
   - { prefix: "export HIVE_CONF_DIR", sufix: "={{ hive_home }}/conf" }
   - { prefix: "export PATH=$PATH:$HIVE_HOME/bin", sufix: ""}
+hive_conf_env_vars:
+  - { prefix: "export HADOOP_HOME", sufix: "={{ hadoop_home }}" }
