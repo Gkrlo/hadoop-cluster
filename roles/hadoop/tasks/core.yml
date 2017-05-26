@@ -21,6 +21,13 @@
     owner: "{{ hadoop_user }}"
     copy: no
 
+- name: Hadoop | Ensure owner & group 
+  file: 
+    path: "{{ hadoop_home }}"
+    state: directory
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
+    recurse: yes
 
 # Set envs variables in ~/.bashrc & profile
 - name: Hadoop | Remove hadoop env vars

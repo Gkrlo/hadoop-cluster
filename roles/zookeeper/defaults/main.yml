@@ -2,8 +2,8 @@
 zookeeper_hosts: [ node1 ]
 
 #Zookeper vars
-zookeeper_url: http://ftp.cixug.es/apache/zookeeper/current/zookeeper
 zookeeper_version: 3.4.10
+zookeeper_url: http://ftp.cixug.es/apache/zookeeper/stable/zookeeper-{{zookeeper_version}}.tar.gz
 zookeeper_ticktime: 2000
 zookeeper_datadir: /var/lib/zookeeper
 zookeeper_logdir: /var/log/zookeeper

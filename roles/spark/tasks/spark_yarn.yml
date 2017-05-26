@@ -21,6 +21,13 @@
     owner: "{{ hadoop_user }}"
     copy: no
 
+- name: Spark | Ensure owner & group 
+  file: 
+    path: "{{ spark_home }}"
+    state: directory
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
+    recurse: yes
 
 # Set envs variables in ~/.bashrc & profile
 - name: Spark | Remove hadoop env vars

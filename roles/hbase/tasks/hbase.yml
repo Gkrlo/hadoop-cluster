@@ -21,6 +21,14 @@
     owner: "{{ hadoop_user }}"
     copy: no
 
+- name: HBase | Ensure owner & group 
+  file: 
+    path: "{{ hbase_home }}"
+    state: directory
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
+    recurse: yes
+
 # Set envs variables in ~/.bashrc & profile
 - name: HBase | Remove hadoop env vars
   lineinfile:

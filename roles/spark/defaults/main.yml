@@ -7,7 +7,7 @@ hadoop_user: hadoop
 hadoop_home: "/opt/hadoop-{{ hadoop_version }}"
 spark_version: 2.1.1
 hadoop_pre_built: 2.7
-spark_download_url: "http://apache.rediris.es/spark/spark-2.1.1/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}.tgz"
+spark_download_url: "http://ftp.cixug.es/apache/spark/spark-{{ spark_version }}/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}.tgz"
 spark_home: "/opt/spark-{{ spark_version }}-bin-hadoop{{ hadoop_pre_built }}"
 spark_env_vars:
   - { prefix: "export SPARK_HOME", sufix: "={{ spark_home }}" }

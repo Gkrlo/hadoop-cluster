@@ -6,7 +6,15 @@ services:
     image: bigdatadebian
     hostname: node1
     ports:
-      - "2221:22"
+      - "2221:22"     #ssh
+      - "2181:2181"   #zookeper
+      - "8020:8020"   #nodemanager
+      - "8050:8050"   #resourcemanager
+      - "8025:8025"   #resourcemanager tracker
+      - "8030:8030"   #resourcemanager scheduler
+      - "10020:10020" #jobhistory
+      - "19888:19888" #jobhistoryweb
+
     networks:
       mynet:
         ipv4_address: 192.168.33.11
@@ -15,7 +23,7 @@ services:
     image: bigdatadebian
     hostname: node2
     ports:
-      - "2222:22"
+      - "2222:22" #ssh
     networks:
       mynet:
         ipv4_address: 192.168.33.12
@@ -24,7 +32,7 @@ services:
     image: bigdatadebian
     hostname: node3
     ports:
-      - "2223:22"
+      - "2223:22" #ssh
     networks:
       mynet:
         ipv4_address: 192.168.33.13
@@ -33,7 +41,7 @@ services:
     image: bigdatadebian
     hostname: node4
     ports:
-      - "2224:22"
+      - "2224:22" #ssh
     networks:
       mynet:
         ipv4_address: 192.168.33.14

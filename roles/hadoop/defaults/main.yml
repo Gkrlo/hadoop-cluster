@@ -12,7 +12,7 @@ hadoop_namenode_dir: "{{ hadoop_home }}/hdfs/namenode"
 hadoop_namesecondary_dir: "{{ hadoop_home }}/hdfs/namesecondary"
 hadoop_datanode_dir: "{{ hadoop_home }}/hdfs/datanode"
 hadoop_java_home: "/usr/lib/jvm/java-8-oracle/"
-hadoop_download_url: "http://apache.rediris.es/hadoop/common/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz"
+hadoop_download_url: "http://ftp.cixug.es/apache/hadoop/common/hadoop-{{ hadoop_version }}/hadoop-{{ hadoop_version }}.tar.gz"
 hadoop_env_vars:
   - { prefix: "export JAVA_HOME", sufix: "={{ hadoop_java_home }}" }
   - { prefix: "export HADOOP_HOME", sufix: "={{ hadoop_home }}" }
