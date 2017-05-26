@@ -1,0 +1,24 @@
+<configuration>
+<property>
+<name>hbase.rootdir</name>
+<value>hdfs://{{ namenode_host }}:8020/hbase</value>
+</property>
+<property>
+<name>hbase.cluster.distributed</name>
+<value>true</value>
+</property>
+<property>
+<name>hbase.zookeeper.property.dataDir</name>
+<value>{{ zookeeper_datadir }}</value>
+</property>
+<property>
+<name>hbase.zookeeper.quorum</name>
+<value>
+{{ zookeeper_hosts|join(',') }}
+</value>
+</property>
+<property>
+<name>hbase.zookeeper.property.clientPort</name>
+<value>{{ zookeeper_clientport }}</value>
+</property>
+</configuration>
