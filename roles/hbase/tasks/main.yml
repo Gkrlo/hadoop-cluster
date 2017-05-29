@@ -1,6 +1,8 @@
 ---
 - include: hbase.yml
 
+- include: phoenix.yml
+
 - name: HBase | Starting Hbase
   shell: "{{ item }}"
   become: yes

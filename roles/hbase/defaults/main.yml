@@ -8,12 +8,15 @@ zookeeper_datadir: /var/lib/zookeeper
 zookeeper_clientport: 2181
 
 # Configuration
-hbase_version: 1.2.5
 hadoop_user: hadoop
-hbase_home: "/opt/hbase-{{ hbase_version }}"
+hbase_version: 1.2.5
 hbase_download_url: "http://ftp.cixug.es/apache/hbase/stable/hbase-{{ hbase_version }}-bin.tar.gz"
+hbase_home: "/opt/hbase-{{ hbase_version }}"
 hbase_manages_zk: "false"
 java_home: "/usr/lib/jvm/java-8-oracle/"
+phoenix_version: 4.10.0
+phoenix_download_url: "http://ftp.cixug.es/apache/phoenix/apache-phoenix-{{ phoenix_version }}-HBase-1.2/bin/apache-phoenix-{{ phoenix_version }}-HBase-1.2-bin.tar.gz"
+phoenix_home: "/opt/apache-phoenix-{{ phoenix_version }}-HBase-1.2-bin"
 
 #Lists of conf vars
 hbase_env_vars:
