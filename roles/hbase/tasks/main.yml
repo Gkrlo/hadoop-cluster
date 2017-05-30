@@ -3,13 +3,13 @@
 
 - include: phoenix.yml
 
-- name: HBase | Starting Hbase
-  shell: "{{ item }}"
-  become: yes
-  become_user: "{{ hadoop_user }}"
-  args:
-    chdir: "{{ hbase_home }}/bin"
-  with_items:
-    - "./stop-hbase.sh"
-    - "./start-hbase.sh"
-  when: inventory_hostname == hbase_master_host
+# - name: HBase | Starting Hbase
+#   shell: "{{ item }}"
+#   become: yes
+#   become_user: "{{ hadoop_user }}"
+#   args:
+#     chdir: "{{ hbase_home }}/bin"
+#   with_items:
+#     - "./stop-hbase.sh"
+#     - "./start-hbase.sh"
+#   when: inventory_hostname == hbase_master_host

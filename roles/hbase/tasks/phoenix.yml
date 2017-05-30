@@ -28,3 +28,12 @@
     group: "{{ hadoop_user }}"
     owner: "{{ hadoop_user }}"
     recurse: yes
+
+- name: Phoenix | Copy server.jar into hbase lib
+  copy:
+    src: "{{ phoenix_home }}/phoenix-4.10.0-HBase-1.2-server.jar"
+    dest: "{{ hbase_home }}/lib/"
+    group: "{{ hadoop_user }}"
+    owner: "{{ hadoop_user }}"
+    remote_src: yes
+

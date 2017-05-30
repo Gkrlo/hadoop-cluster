@@ -14,6 +14,8 @@ services:
       - "8030:8030"   #resourcemanager scheduler
       - "10020:10020" #jobhistory
       - "19888:19888" #jobhistoryweb
+      - "60010:60010" #hbase master
+      
 
     networks:
       mynet:
